@@ -1,7 +1,7 @@
 module.exports = {
   dependency: {
     platforms: {
-      ios: { podspecPath: "./ios/TextRecognition.podspec" },
+      ios: { podspecPath: "./TextRecognition.podspec" },
       android: { sourceDir: "./android" },
     },
   },
