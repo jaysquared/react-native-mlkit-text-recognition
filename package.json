@@ -1,0 +1,15 @@
+{
+  "name": "react-native-mlkit-text-recognition",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [
+    "react-native",
+    "mlkit",
+    "text",
+    "ocr"
+  ],
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  }
+}
