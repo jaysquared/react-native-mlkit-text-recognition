@@ -1,0 +1,41 @@
+# react-native-mlkit-text-recognition
+
+A cross-platform React Native bridge for Google MLKit Text Recognition (iOS v8.x & Android ML Kit v16.x)
+
+## Installation
+
+Install from npm:
+```bash
+yarn add react-native-mlkit-text-recognition
+```
+
+### iOS
+
+With React Native autolinking (RN ≥0.60), the podspec should be detected automatically. To verify:
+1. Check your `ios/Podfile` for a line like:
+   ```ruby
+   pod 'TextRecognition', :path => '../node_modules/react-native-mlkit-text-recognition/ios/TextRecognition.podspec'
+   ```
+2. If it's missing, add it manually under your target block.
+3. From the `ios/` folder:
+   ```bash
+   pod install --repo-update
+   ```
+
+### Android
+
+Autolinking will register the AAR. If you need manual setup, in `android/settings.gradle` add:
+```gradle
+include ':react-native-mlkit-text-recognition'
+project(':react-native-mlkit-text-recognition').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-mlkit-text-recognition/android')
+```
+Then in `android/app/build.gradle`, add:
+```gradle
+implementation project(':react-native-mlkit-text-recognition')
+```
+
+Clean and rebuild:
+```bash
+cd android
+./gradlew clean
+``` 
