@@ -16,11 +16,13 @@ RCT_REMAP_METHOD(recognizeFromImage,
                  resolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
-  UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
-  if (!image) {
-    reject(@"E_NO_IMAGE", @"Failed to load image at path", nil);
-    return;
-  }
+  NSURL *fileURL = [NSURL URLWithString:imagePath];
+NSData *data = [NSData dataWithContentsOfURL:fileURL];
+UIImage *image = [UIImage imageWithData:data];
+if (!image) {
+  reject(@"E_NO_IMAGE", @"Failed to load image at path", nil);
+  return;
+}
 
   // the new v2 API wants options, not the old deprecated factory
   MLKTextRecognizerOptions *options = [[MLKTextRecognizerOptions alloc] init];
