@@ -1,0 +1,27 @@
+// Android library module build configuration
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdkVersion 31
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    // React Native core dependency
+    implementation "com.facebook.react:react-native:+"
+    // ML Kit Text Recognition
+    implementation "com.google.mlkit:text-recognition:16.0.0"
+}
