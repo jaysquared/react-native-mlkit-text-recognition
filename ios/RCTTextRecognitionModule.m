@@ -1,11 +1,16 @@
 #import "RCTTextRecognitionModule.h"
+
+// these bring in the recognizer and the VisionImage type
 @import MLKitTextRecognition;
+@import MLKitVision;
+
+// **this** brings in MLKText and its properties
+@import MLKitTextRecognitionCommon;
 
 @implementation RCTTextRecognitionModule
 
 RCT_EXPORT_MODULE(TextRecognition);
 
-// Expose method to JS
 RCT_REMAP_METHOD(recognizeFromImage,
                  recognizeFromImageWithPath:(NSString *)imagePath
                  resolver:(RCTPromiseResolveBlock)resolve
@@ -17,18 +22,19 @@ RCT_REMAP_METHOD(recognizeFromImage,
     return;
   }
 
-  MLKTextRecognizer *recognizer = [MLKTextRecognizer textRecognizer];
+  // the new v2 API wants options, not the old deprecated factory
+  MLKTextRecognizerOptions *options = [[MLKTextRecognizerOptions alloc] init];
+  MLKTextRecognizer *recognizer = [MLKTextRecognizer textRecognizerWithOptions:options];
+
   MLKVisionImage *visionImage = [[MLKVisionImage alloc] initWithImage:image];
+
   [recognizer processImage:visionImage
-                  completion:^(MLKText *_Nullable result, NSError *_Nullable error) {
+                completion:^(MLKText *_Nullable result, NSError *_Nullable error) {
     if (error != nil || result == nil) {
       reject(@"E_RECOGNIZE_FAIL", error.localizedDescription, error);
       return;
     }
-
-    // Gather recognized text
-    NSString *fullText = result.text;
-    resolve(fullText);
+    resolve(result.text);
   }];
 }
 
