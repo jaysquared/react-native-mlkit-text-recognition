@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    namespace = "com.jaysquared.textrecognition"
     compileSdkVersion 31
 
     defaultConfig {
