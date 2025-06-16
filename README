@@ -7,35 +7,45 @@ A cross-platform React Native bridge for Google MLKit Text Recognition (iOS v8.x
 Install from npm:
 ```bash
 yarn add react-native-mlkit-text-recognition
+pod install --repo-update
 ```
 
 ### iOS
 
-With React Native autolinking (RN ≥0.60), the podspec should be detected automatically. To verify:
-1. Check your `ios/Podfile` for a line like:
-   ```ruby
-   pod 'TextRecognition', :path => '../node_modules/react-native-mlkit-text-recognition/ios/TextRecognition.podspec'
-   ```
-2. If it's missing, add it manually under your target block.
-3. From the `ios/` folder:
-   ```bash
-   pod install --repo-update
-   ```
+MLKitTextRecognitionCommon includes an embargoed domain (nic.ir.md). This will result in app store rejections. Apply this patch to fix that until Google releases an update.
+
+# === Top-level post_install ===
+post_install do |installer|
+
+# 1) Get the binary as a plain String
+  bin_path = (installer.sandbox.root + 'MLKitTextRecognitionCommon/Frameworks/MLKitTextRecognitionCommon.framework/MLKitTextRecognitionCommon').to_s
+
+  puts '🔍 Patching MLKitTextRecognitionCommon for embargoed domains…'
+
+  patch_script = <<~BASH
+    #!/usr/bin/env bash
+    BINARY="#{bin_path}"
+    if [ ! -f "$BINARY" ]; then
+      echo "⚠️  Binary not found at $BINARY, skipping patch."
+      exit 0
+    fi
+    grep -aob 'nic\\.ir\\.md' "$BINARY" | \
+    while IFS=: read -r offset match; do
+      count=${#match}
+      echo "  • Zeroing out $count bytes at offset $offset"
+      dd if=/dev/zero bs=1 count=$count seek=$offset of="$BINARY" conv=notrunc >/dev/null 2>&1
+    done
+
+    FRAMEWORK_DIR="$(dirname "$BINARY")"
+    IDENTITY="${CODE_SIGN_IDENTITY:--}"
+    echo "🔑 Re-signing MLKit at $FRAMEWORK_DIR with identity: $IDENTITY"
+    codesign --force --sign "$IDENTITY" --preserve-metadata=identifier,entitlements "$FRAMEWORK_DIR"
+  BASH
+
+  system('bash', '-c', patch_script)
+
+end
 
 ### Android
 
-Autolinking will register the AAR. If you need manual setup, in `android/settings.gradle` add:
-```gradle
-include ':react-native-mlkit-text-recognition'
-project(':react-native-mlkit-text-recognition').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-mlkit-text-recognition/android')
-```
-Then in `android/app/build.gradle`, add:
-```gradle
-implementation project(':react-native-mlkit-text-recognition')
-```
-
-Clean and rebuild:
-```bash
-cd android
-./gradlew clean
-``` 
+Untested
