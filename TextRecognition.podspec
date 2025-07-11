@@ -9,6 +9,6 @@ Pod::Spec.new do |s|
   s.source           = { :git => s.homepage, :tag => s.version }
 
   s.source_files     = "ios/**/*.{h,m}"
-  s.dependency       'MLKitTextRecognition', '~> 6.0'
+  s.dependency       'MLKitTextRecognition', '~> 9.0'
   s.dependency       "React-Core"
 end
