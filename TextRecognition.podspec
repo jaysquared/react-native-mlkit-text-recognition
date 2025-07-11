@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "TextRecognition"
-  s.version          = "1.0.0"
+  s.version          = "1.0.1"
   s.summary          = "React Native bridge for MLKit Text Recognition"
   s.license          = { :type => "MIT" }
   s.author           = { "Your Name" => "you@example.com" }
@@ -9,6 +9,6 @@ Pod::Spec.new do |s|
   s.source           = { :git => s.homepage, :tag => s.version }
 
   s.source_files     = "ios/**/*.{h,m}"
-  s.dependency       'MLKitTextRecognition', '~> 9.0'
+  s.dependency       'MLKitTextRecognition', '~> 7.0'
   s.dependency       "React-Core"
 end
